@@ -12,7 +12,7 @@ PLAYER_WIDTH=40
 PLAYER_HEIGHT=60
 PLAYER_VEL=5
 
-def draw(player):
+def draw(player,elapsed_time):
     WIN.blit(BG,(0,0))
 
     pygame.draw.rect(WIN,"red",player)
@@ -24,9 +24,13 @@ def main():
 
     player=pygame.Rect(200,HEIGHT-PLAYER_HEIGHT,PLAYER_WIDTH,PLAYER_HEIGHT)
     clock=pygame.time.Clock()
+    start_time=time.time()
+    elapsed_time=0
 
     while run:
         clock.tick(60)
+        elapsed_time=time.time()-start_time
+
         for event in pygame.event.get():
             if event.type==pygame.QUIT:
                 run=False
@@ -38,8 +42,7 @@ def main():
         if keys[pygame.K_RIGHT] and player.x+PLAYER_VEL+PLAYER_WIDTH<=WIDTH:
             player.x+=PLAYER_VEL
 
-
-        draw(player)
+        draw(player,elapsed_time)
     pygame.quit()
 
 if __name__ == "__main__":
