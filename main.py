@@ -14,15 +14,20 @@ PLAYER_HEIGHT=60
 PLAYER_VEL=5
 STAR_WIDTH=10
 STAR_HEIGHT = 20
+STAR_VEL= 3
+
 FONT=pygame.font.SysFont("comicscans",30)
 
-def draw(player,elapsed_time):
+def draw(player,elapsed_time, stars):
     WIN.blit(BG,(0,0))
 
     time_text=FONT.render(f"Time:{round(elapsed_time)}s",1,"white")
     WIN.blit(time_text,(10,10))
 
     pygame.draw.rect(WIN,"red",player)
+
+    for star in stars:
+        pygame.draw.rect(WIN, "white", star)
 
     pygame.display.update()
 
@@ -38,9 +43,10 @@ def main():
     star_count=0
 
     stars=[]
+    hit = False
 
     while run:
-        star_count==clock.tick(60)
+        star_count+=clock.tick(60)
         elapsed_time=time.time()-start_time
 
         if star_count > star_add_increment:
@@ -64,7 +70,16 @@ def main():
         if keys[pygame.K_RIGHT] and player.x+PLAYER_VEL+PLAYER_WIDTH<=WIDTH:
             player.x+=PLAYER_VEL
 
-        draw(player,elapsed_time)
+        for star in stars[:]:
+            star.y += STAR_VEL
+            if star.y > HEIGHT:
+                stars.remove(star)
+            elif star.y + star.height >= player.y and star.colliderect(player):
+                stars.remove(star)
+                hit = True
+                break
+
+        draw(player,elapsed_time, stars)
     pygame.quit()
 
 if __name__ == "__main__":
